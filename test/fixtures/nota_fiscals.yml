@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+   usuario: one
+   documento_emitente: MyString
+   inscricao_estadual: MyString
+   serie: MyString
+   numero: 1
+   data_emissao: 2025-11-09 16:07:24
+   status_autorizacao: MyString
+   mensagem_autorizacao: MyString
+   protocolo: MyString
+   data_autorizacao: 2025-11-09 16:07:24
+   cancelada: false
+   data_cancelamento: 2025-11-09 16:07:24
+   xml_assinado: MyText
+   resposta_autorizacao: MyText
+
+two:
+   usuario: two
+   documento_emitente: MyString
+   inscricao_estadual: MyString
+   serie: MyString
+   numero: 1
+   data_emissao: 2025-11-09 16:07:24
+   status_autorizacao: MyString
+   mensagem_autorizacao: MyString
+   protocolo: MyString
+   data_autorizacao: 2025-11-09 16:07:24
+   cancelada: false
+   data_cancelamento: 2025-11-09 16:07:24
+   xml_assinado: MyText
+   resposta_autorizacao: MyText

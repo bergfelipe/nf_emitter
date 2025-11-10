@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow p-4" style="width: 380px; border-radius: 1rem;">
+    <h3 class="text-center mb-3"><i class="bi bi-lock-fill text-primary"></i> Login</h3>
+    <p class="text-center text-muted mb-4">Acesse sua conta para emitir notas fiscais</p>
+
+    <%= form_with scope: :user, url: session_path(:user), local: true do |f| %>
+      <div class="mb-3">
+        <%= f.label :email, "E-mail", class: "form-label" %>
+        <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "exemplo@email.com" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password, "Senha", class: "form-label" %>
+        <%= f.password_field :password, class: "form-control", placeholder: "••••••••" %>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <% if devise_mapping.rememberable? %>
+          <div class="form-check">
+            <%= f.check_box :remember_me, class: "form-check-input" %>
+            <%= f.label :remember_me, "Lembrar-me", class: "form-check-label" %>
+          </div>
+        <% end %>
+        <%= link_to "Esqueceu a senha?", new_password_path(:user), class: "small text-primary text-decoration-none" %>
+      </div>
+
+      <%= f.submit "Entrar", class: "btn btn-primary w-100" %>
+    <% end %>
+
+    <hr>
+    <div class="text-center">
+      <%= link_to "Criar nova conta", new_registration_path(:user), class: "btn btn-outline-secondary w-100" %>
+    </div>
+  </div>
+</div>

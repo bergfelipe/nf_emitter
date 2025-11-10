@@ -1,0 +1,87 @@
+<%= form_with(model: nota_fiscal) do |form| %>
+  <% if nota_fiscal.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(nota_fiscal.errors.count, "error") %> prohibited this nota_fiscal from being saved:</h2>
+
+      <ul>
+        <% nota_fiscal.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label : usuario_id, style: "display: block" %>
+    <%= form.text_field : usuario_id %>
+  </div>
+
+  <div>
+    <%= form.label : documento_emitente, style: "display: block" %>
+    <%= form.text_field : documento_emitente %>
+  </div>
+
+  <div>
+    <%= form.label : inscricao_estadual, style: "display: block" %>
+    <%= form.text_field : inscricao_estadual %>
+  </div>
+
+  <div>
+    <%= form.label : serie, style: "display: block" %>
+    <%= form.text_field : serie %>
+  </div>
+
+  <div>
+    <%= form.label : numero, style: "display: block" %>
+    <%= form.number_field : numero %>
+  </div>
+
+  <div>
+    <%= form.label : data_emissao, style: "display: block" %>
+    <%= form.datetime_field : data_emissao %>
+  </div>
+
+  <div>
+    <%= form.label : status_autorizacao, style: "display: block" %>
+    <%= form.text_field : status_autorizacao %>
+  </div>
+
+  <div>
+    <%= form.label : mensagem_autorizacao, style: "display: block" %>
+    <%= form.text_field : mensagem_autorizacao %>
+  </div>
+
+  <div>
+    <%= form.label : protocolo, style: "display: block" %>
+    <%= form.text_field : protocolo %>
+  </div>
+
+  <div>
+    <%= form.label : data_autorizacao, style: "display: block" %>
+    <%= form.datetime_field : data_autorizacao %>
+  </div>
+
+  <div>
+    <%= form.label : cancelada, style: "display: block" %>
+    <%= form.check_box : cancelada %>
+  </div>
+
+  <div>
+    <%= form.label : data_cancelamento, style: "display: block" %>
+    <%= form.datetime_field : data_cancelamento %>
+  </div>
+
+  <div>
+    <%= form.label : xml_assinado, style: "display: block" %>
+    <%= form.text_area : xml_assinado %>
+  </div>
+
+  <div>
+    <%= form.label : resposta_autorizacao, style: "display: block" %>
+    <%= form.text_area : resposta_autorizacao %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

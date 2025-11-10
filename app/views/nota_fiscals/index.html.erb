@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Nota fiscals</h1>
+
+<div id="nota_fiscals">
+  <% @nota_fiscals.each do |nota_fiscal| %>
+    <%= render nota_fiscal %>
+    <p>
+      <%= link_to "Show this nota fiscal", nota_fiscal %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New nota fiscal", new_nota_fiscal_path %>

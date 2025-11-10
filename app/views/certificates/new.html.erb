@@ -1,0 +1,15 @@
+<h1>Instalar Certificado Digital</h1>
+
+<%= form_with url: certificate_path, local: true, multipart: true do |f| %>
+  <div class="mb-3">
+    <%= f.label :certificate_file, "Arquivo do Certificado (.pfx ou .p12)", class: "form-label" %>
+    <%= f.file_field :certificate_file, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :certificate_password, "Senha", class: "form-label" %>
+    <%= f.password_field :certificate_password, class: "form-control", required: true %>
+  </div>
+
+  <%= f.submit "Validar e Salvar", class: "btn btn-primary" %>
+<% end %>
