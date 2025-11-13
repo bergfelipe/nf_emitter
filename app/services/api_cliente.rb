@@ -30,4 +30,19 @@ class ApiCliente
       error: e.message
     }
   end
+
+  def self.consultar_notas(cpf)
+    response = get("/v1/consulta/#{cpf}")
+
+    {
+      success: response.code == 200,
+      status: response.code,
+      body: response.parsed_response
+    }
+  rescue => e
+    {
+      success: false,
+      error: e.message
+    }
+  end
 end

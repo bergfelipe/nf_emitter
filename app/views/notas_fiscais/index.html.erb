@@ -1,14 +1,127 @@
-<p style="color: green"><%= notice %></p>
+<% format_datetime = lambda do |value|
+     next "—" if value.blank?
+     time = Time.zone.parse(value) rescue nil
+     time ? l(time, format: :short) : value
+   end %>
 
-<h1>Nota fiscals</h1>
-
-<div id="nota_fiscals">
-  <% @nota_fiscals.each do |nota_fiscal| %>
-    <%= render nota_fiscal %>
-    <p>
-      <%= link_to "Show this nota fiscal", nota_fiscal %>
-    </p>
-  <% end %>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">Notas emitidas via API</h1>
+    <p class="text-muted mb-0">Consulte diretamente o serviço externo usando o CPF do emitente e visualize o status detalhado de cada NFA-e.</p>
+  </div>
+  <%= link_to "Emitir nova nota", new_notas_fiscai_path, class: "btn btn-outline-primary" %>
 </div>
 
-<%= link_to "New nota fiscal", new_notas_fiscai_path %>
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body">
+    <%= form_with url: notas_fiscais_path, method: :get, local: true, class: "row g-3 align-items-end" do %>
+      <div class="col-md-4">
+        <%= label_tag :cpf, "CPF do emitente", class: "form-label" %>
+        <%= text_field_tag :cpf, @cpf_consulta, class: "form-control", placeholder: "Somente números" %>
+      </div>
+      <div class="col-md-3">
+        <%= label_tag :dummy, " ", class: "form-label d-none d-md-block" %>
+        <%= submit_tag "Consultar notas", class: "btn btn-primary w-100" %>
+      </div>
+      <div class="col-md-5 text-muted small">
+        <strong>Dica:</strong> caso não lembre o CPF, basta emitir uma nova nota e voltaremos a preenchê-lo automaticamente.
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if @consulta_error.present? %>
+  <div class="alert alert-warning"><%= @consulta_error %></div>
+<% end %>
+
+<% if @consulta_result.present? %>
+  <div class="row gy-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <p class="text-muted mb-1">Código HTTP</p>
+          <h3 class="h4 mb-0"><%= @consulta_result["codigo"] || "—" %></h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <p class="text-muted mb-1">Mensagem retornada</p>
+          <h3 class="h5 mb-0"><%= @consulta_result["mensagem"] || "—" %></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if @notas_consulta.present? %>
+  <div class="timeline">
+    <% @notas_consulta.each_with_index do |nota, index| %>
+      <% status = nota["CSTAT_AUTORIZAR"] || nota["CSTAT_CONSULTA"] %>
+      <% motivo = nota["XMOTIVO_AUTORIZAR"] || nota["XMOTIVO_CONSULTA"] %>
+      <% aprovacao = status.to_s.start_with?("1") %>
+      <% badge_class = aprovacao ? "bg-success" : "bg-warning text-dark" %>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+            <div>
+              <span class="badge <%= badge_class %> px-3 py-2">cStat: <%= status || "—" %></span>
+              <span class="badge bg-light text-dark border ms-2">Série <%= nota["SERIE"] || "—" %> · NF <%= nota["NNF"] || "—" %></span>
+            </div>
+            <small class="text-muted">Consulta #<%= index + 1 %> • <%= l(Time.zone.parse(nota["created_at"])) rescue "—" %></small>
+          </div>
+
+          <h5 class="mb-1">Chave de acesso</h5>
+          <p class="font-monospace text-break mb-3"><%= nota["CHAVE"] || "—" %></p>
+
+          <div class="row gy-3">
+            <div class="col-md-4">
+              <p class="text-muted small mb-1">Emitente</p>
+              <div class="fw-semibold"><%= nota["EMIT_ID"] || "—" %></div>
+            </div>
+            <div class="col-md-4">
+              <p class="text-muted small mb-1">Ambiente / Série</p>
+              <div class="fw-semibold">Ambiente <%= nota["GTA"] || "?" %> · Série <%= nota["SERIE"] || "—" %></div>
+            </div>
+            <div class="col-md-4">
+              <p class="text-muted small mb-1">Status</p>
+              <div class="fw-semibold"><%= motivo || "—" %></div>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="row gy-3 align-items-start">
+            <div class="col-md-6">
+              <p class="text-muted small mb-1">Datas importantes</p>
+              <ul class="list-unstyled mb-0">
+                <li><strong>Envio:</strong> <%= format_datetime.call(nota["DT_INI"]) %></li>
+                <li><strong>WebService Autorização:</strong> <%= format_datetime.call(nota["DT_WS_AUTORIZACAO"]) %></li>
+                <li><strong>Consulta:</strong> <%= format_datetime.call(nota["DT_WS_CONSULTA"]) %></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <p class="text-muted small mb-1">Protocolos & códigos</p>
+              <ul class="list-unstyled mb-0">
+                <li><strong>Protocolo:</strong> <%= nota["NPROT"].presence || "—" %></li>
+                <li><strong>Recibo:</strong> <%= nota["NREC"].presence || "—" %></li>
+                <li><strong>IP:</strong> <%= nota["IP"] || "—" %></li>
+              </ul>
+            </div>
+          </div>
+
+          <% if nota["XML_ASSINADO_AUTORIZACAO"].present? %>
+            <details class="mt-4">
+              <summary class="mb-2 text-primary">Ver XML assinado (Base64)</summary>
+              <pre class="bg-light p-3 rounded border small mb-0"><%= nota["XML_ASSINADO_AUTORIZACAO"] %></pre>
+            </details>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% elsif @cpf_consulta.present? && @consulta_error.blank? %>
+  <div class="alert alert-info">Nenhuma nota encontrada para o CPF informado.</div>
+<% end %>

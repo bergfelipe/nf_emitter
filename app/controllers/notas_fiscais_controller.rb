@@ -4,7 +4,23 @@ class NotasFiscaisController < ApplicationController
   before_action :set_nota_fiscal, only: %i[edit update destroy]
 
   def index
-    @nota_fiscals = NotaFiscal.all
+    @cpf_consulta = params[:cpf].presence || cpf_padrao
+    @consulta_result = nil
+    @consulta_error = nil
+    @notas_consulta = []
+
+    if @cpf_consulta.present?
+      resposta = ApiCliente.consultar_notas(@cpf_consulta)
+
+      if resposta[:success]
+        @consulta_result = resposta[:body] || {}
+        @notas_consulta = Array(@consulta_result["notas"])
+      else
+        @consulta_error = resposta[:error] || "Não foi possível consultar as notas."
+      end
+    else
+      @consulta_error = "Informe um CPF para consultar as notas emitidas."
+    end
   end
 
   def show
@@ -92,5 +108,9 @@ class NotasFiscaisController < ApplicationController
         .sort_by { |key, _| key.to_i }
         .map { |_, value| value }
     end
+  end
+
+  def cpf_padrao
+    current_user.emission_logs.order(created_at: :desc).limit(1).map { |log| log.nota_payload.dig("emit", "CPF") }.compact.first
   end
 end
