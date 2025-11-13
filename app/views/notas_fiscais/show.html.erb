@@ -1,0 +1,23 @@
+<div class="mb-4">
+  <h1 class="h3 mb-1">Resultado da Emissão</h1>
+  <p class="text-muted mb-0">Visualize exatamente o que foi enviado e recebido. Nenhum dado é salvo localmente.</p>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Resposta da API</h5>
+    <pre class="bg-light p-3 rounded border"><%= JSON.pretty_generate(@resposta.as_json) %></pre>
+  </div>
+</div>
+
+<% if @payload_enviado.present? %>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title">JSON enviado (nota)</h5>
+      <p class="text-muted small mb-2">Somente os dados da nota são exibidos aqui. O certificado permanece apenas no backend.</p>
+      <pre class="bg-light p-3 rounded border"><%= JSON.pretty_generate(@payload_enviado.as_json) %></pre>
+    </div>
+  </div>
+<% end %>
+
+<%= link_to "Emitir outra nota", new_notas_fiscai_path, class: "btn btn-primary" %>

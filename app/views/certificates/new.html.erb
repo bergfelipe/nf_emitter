@@ -1,15 +1,46 @@
-<h1>Instalar Certificado Digital</h1>
 
-<%= form_with url: certificate_path, local: true, multipart: true do |f| %>
-  <div class="mb-3">
-    <%= f.label :certificate_file, "Arquivo do Certificado (.pfx ou .p12)", class: "form-label" %>
-    <%= f.file_field :certificate_file, class: "form-control", required: true %>
-  </div>
 
-  <div class="mb-3">
-    <%= f.label :certificate_password, "Senha", class: "form-label" %>
-    <%= f.password_field :certificate_password, class: "form-control", required: true %>
-  </div>
+  <div class="card shadow-lg p-5" >
+    
+    <h2 class="text-center mb-4">Instalar Certificado Digital</h2>
 
-  <%= f.submit "Validar e Salvar", class: "btn btn-primary" %>
+    <% if flash[:alert] %>
+      <div class="alert alert-danger"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="alert alert-success"><%= flash[:notice] %></div>
+    <% end %>
+
+    <% if @certificado %>
+      <div class="alert alert-info">
+        <strong>Certificado instalado:</strong> <%= @certificado.nome %><br>
+        <small class="text-muted">
+          Enviado em <%= @certificado.created_at.strftime("%d/%m/%Y %H:%M") %>
+        </small>
+      </div>
+    <% else %>
+
+    <%= form_with url: certificate_path, local: true, multipart: true do |f| %>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :certificate_file, "Arquivo (.pfx / .p12)", class: "form-label fw-semibold" %>
+          <%= f.file_field :certificate_file, class: "form-control", required: true %>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= f.label :certificate_password, "Senha do Certificado", class: "form-label fw-semibold" %>
+          <%= f.password_field :certificate_password, class: "form-control", required: true %>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+        <%= f.submit (@certificado ? "Substituir Certificado" : "Validar e Salvar"),
+          class: "btn btn-primary px-4 py-2" %>
+      </div>
+
+    <% end %>
 <% end %>
+  </div>
+

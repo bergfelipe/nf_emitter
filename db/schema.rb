@@ -10,9 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_09_201546) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_13_123736) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "certificados", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "nome"
+    t.text "pfx_criptografado"
+    t.text "senha_criptografada"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_certificados_on_user_id"
+  end
+
+  create_table "emission_logs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "uuid", null: false
+    t.jsonb "nota_payload", default: {}, null: false
+    t.jsonb "resposta_payload", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_emission_logs_on_user_id"
+    t.index ["uuid"], name: "index_emission_logs_on_uuid", unique: true
+  end
 
   create_table "nota_fiscals", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -47,5 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_09_201546) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "certificados", "users"
+  add_foreign_key "emission_logs", "users"
   add_foreign_key "nota_fiscals", "users"
 end

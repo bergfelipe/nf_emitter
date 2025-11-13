@@ -113,7 +113,7 @@ crossorigin="anonymous"></script>
         
             <li class="nav-item">
               <% if current_user.certificate_installed? %>
-                <%= link_to new_nota_fiscal_path, class: "nav-link text-white d-flex align-items-center" do %>
+                <%= link_to new_notas_fiscai_path, class: "nav-link text-white d-flex align-items-center" do %>
                   <i class="fa-solid fa-file-circle-plus me-2"></i> Emitir Nota
                 <% end %>
               <% else %>
