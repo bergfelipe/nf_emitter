@@ -39,58 +39,62 @@ crossorigin="anonymous"></script>
 
 
     <style>
-      /* 🎨 Estilo visual da sidebar */
-      nav {
-        background-color: #1c1f23;
-      }
+ /* Sidebar padrão */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  transition: width 0.25s ease;
+}
 
-      .nav-link {
-        border-radius: 8px;
-        transition: all 0.2s ease-in-out;
-      }
+/* Links */
+.sidebar-link {
+  padding: 10px 14px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
 
-      .nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        transform: translateX(3px);
-      }
+.sidebar-link:hover {
+  background: rgba(255,255,255,0.1);
+}
 
-      .nav-link i {
-        transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
-      }
+/* Ícones */
+.sidebar-link i {
+  font-size: 1.2rem;
+}
 
-      .nav-link:hover i {
-        color: #ffc107;
-        transform: scale(1.1);
-      }
+/* ----------------------------- */
+/* TABLET — sidebar estreita     */
+/* ----------------------------- */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 80px; /* igual ao modelo da imagem */
+  }
 
-      .nav-link.disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
-      }
+  /* Esconde textos */
+  .sidebar span {
+    display: none;
+  }
 
-      h5 i {
-        animation: pulse 2s infinite;
-      }
+  /* Esconde título normal */
+  .logo-text {
+    display: none;
+  }
 
-      @keyframes pulse {
-        0% { color: #ffc107; }
-        50% { color: #f8f9fa; }
-        100% { color: #ffc107; }
-      }
+  /* Centraliza o ícone do topo */
+  .sidebar-header {
+    justify-content: center;
+  }
 
-      /* 🎨 Customização geral */
-      body {
-        font-family: 'Inter', sans-serif;
-      }
+  /* Ícones centralizados */
+  .sidebar-link {
+    justify-content: center;
+  }
 
-      main {
-        background-color: #f8f9fa;
-        min-height: 100vh;
-      }
+  .sidebar-link i {
+    margin: 0;
+  }
+}
 
-      .alert-warning strong {
-        color: #856404;
-      }
     </style>
   </head>
 
@@ -98,58 +102,71 @@ crossorigin="anonymous"></script>
     <% if user_signed_in? %>
       <div class="d-flex">
         <!-- 🧭 Sidebar -->
-        <nav class="bg-dark text-white p-3 d-flex flex-column" style="min-height: 100vh; width: 240px;">
-          <h5 class="mb-4 text-center">
-            <i class="fa-solid fa-file-invoice-dollar text-warning me-2"></i>
-            NF Emissor
-          </h5>
+        <nav class="sidebar bg-dark text-white p-3">
+
+          <!-- Cabeçalho -->
+          <div class="sidebar-header d-flex align-items-center mb-4">
+            <i class="fa-solid fa-file-invoice-dollar text-warning fs-4 me-2 logo-icon"></i>
+            <span class="logo-text h5 m-0">NF Emissor</span>
+          </div>
         
-          <ul class="nav flex-column gap-2">
+          <ul class="nav flex-column">
+        
             <li class="nav-item">
-              <%= link_to authenticated_root_path, class: "nav-link text-white d-flex align-items-center" do %>
-                <i class="fa-solid fa-chart-line me-2"></i> Dashboard
+              <%= link_to authenticated_root_path, class: "nav-link d-flex align-items-center sidebar-link" do %>
+                <i class="fa-solid fa-chart-line me-2"></i>
+                <span>Dashboard</span>
               <% end %>
             </li>
         
             <li class="nav-item">
               <% if current_user.certificate_installed? %>
-                <%= link_to new_notas_fiscai_path, class: "nav-link text-white d-flex align-items-center" do %>
-                  <i class="fa-solid fa-file-circle-plus me-2"></i> Emitir Nota
+                <%= link_to new_notas_fiscai_path, class: "nav-link d-flex align-items-center sidebar-link" do %>
+                  <i class="fa-solid fa-file-circle-plus me-2"></i>
+                  <span>Emitir Nota</span>
                 <% end %>
               <% else %>
-                <a class="nav-link disabled text-secondary d-flex align-items-center">
-                  <i class="fa-solid fa-file-circle-plus me-2"></i> Emitir Nota
+                <a class="nav-link disabled d-flex align-items-center sidebar-link">
+                  <i class="fa-solid fa-file-circle-plus me-2"></i>
+                  <span>Emitir Nota</span>
                 </a>
               <% end %>
             </li>
         
             <li class="nav-item">
               <% if current_user.certificate_installed? %>
-                <%= link_to notas_fiscais_path, class: "nav-link text-white d-flex align-items-center" do %>
-                  <i class="fa-solid fa-folder-open me-2"></i> Notas Emitidas
+                <%= link_to notas_fiscais_path, class: "nav-link d-flex align-items-center sidebar-link" do %>
+                  <i class="fa-solid fa-folder-open me-2"></i>
+                  <span>Notas Emitidas</span>
                 <% end %>
               <% else %>
-                <a class="nav-link disabled text-secondary d-flex align-items-center">
-                  <i class="fa-solid fa-folder-open me-2"></i> Notas Emitidas
+                <a class="nav-link disabled d-flex align-items-center sidebar-link">
+                  <i class="fa-solid fa-folder-open me-2"></i>
+                  <span>Notas Emitidas</span>
                 </a>
               <% end %>
             </li>
         
             <li class="nav-item">
-              <%= link_to new_certificate_path, class: "nav-link text-white d-flex align-items-center" do %>
-                <i class="fa-solid fa-shield-halved me-2"></i> Certificado
+              <%= link_to new_certificate_path, class: "nav-link d-flex align-items-center sidebar-link" do %>
+                <i class="fa-solid fa-shield-halved me-2"></i>
+                <span>Certificado</span>
               <% end %>
             </li>
         
             <li class="nav-item mt-4">
               <%= link_to destroy_user_session_path,
                           data: { turbo_method: :delete },
-                          class: "nav-link text-danger d-flex align-items-center" do %>
-                <i class="fa-solid fa-right-from-bracket me-2"></i> Sair
+                          class: "nav-link text-danger d-flex align-items-center sidebar-link" do %>
+                <i class="fa-solid fa-right-from-bracket me-2"></i>
+                <span>Sair</span>
               <% end %>
             </li>
+        
           </ul>
+        
         </nav>
+        
         
 
         <!-- 📊 Conteúdo principal -->
